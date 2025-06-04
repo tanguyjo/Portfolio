@@ -36,7 +36,7 @@ const competences: CompetenceCategory[] = [
       { name: "PHP", icon: "php.png" },
       { name: "Java", icon: "java.png" },
       { name: "Go", icon: "go.png" },
-      { name: "C#", icon: "csharp.png" },
+      // { name: "C#", icon: "csharp.png" },
     ],
   },
   {
