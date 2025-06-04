@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 
-const competences = [
+interface Skill {
+  name: string;
+  icon: string;
+}
+
+interface CompetenceCategory {
+  category: string;
+  skills: Skill[];
+}
+
+interface Langue {
+  nom: string;
+  niveau: string;
+}
+
+const competences: CompetenceCategory[] = [
   {
     category: "FrontEnd",
     skills: [
@@ -35,15 +50,15 @@ const competences = [
   },
 ];
 
-const langues = [
+const langues: Langue[] = [
   { nom: "Français", niveau: "Langue maternelle" },
   { nom: "Anglais", niveau: "Langue maternelle" },
   { nom: "Portugais", niveau: "Intermédiaire – compréhension et expression orale" },
   { nom: "Espagnol", niveau: "Débutant avancé – bases solides, lecture et expression simple" },
-  { nom: "Arabe", niveau: "Débutant – bases, lecture et écriture" }
-]
+  { nom: "Arabe", niveau: "Débutant – bases, lecture et écriture" },
+];
 
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
   wrapper: {
     padding: "120px 20px 40px",
     marginTop: "-80px",
@@ -91,7 +106,7 @@ const styles = {
   },
   categoryTitle: {
     fontSize: "1.5rem",
-    fontWeight: "600",
+    fontWeight: 600,
     marginBottom: 12,
     color: "#ffffff",
   },
@@ -109,7 +124,7 @@ const styles = {
     padding: "8px 12px",
     borderRadius: 8,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: 500,
     color: "#222",
     boxShadow: "0 2px 6px rgba(116, 123, 255, 0.2)",
   },
@@ -149,7 +164,7 @@ const Competences: React.FC = () => {
       `}</style>
 
       <section id="competences" style={styles.wrapper}>
-        {/* Gauche : Compétences */}
+        {/* Colonne gauche : Compétences */}
         <div style={styles.leftColumn}>
           <div
             style={styles.headingWrapper}
@@ -181,7 +196,7 @@ const Competences: React.FC = () => {
           ))}
         </div>
 
-        {/* Droite : Langues parlées */}
+        {/* Colonne droite : Langues */}
         <div style={styles.rightColumn}>
           <div
             style={styles.headingWrapper}

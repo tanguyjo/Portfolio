@@ -12,9 +12,9 @@ const About: React.FC = () => {
     document.body.removeChild(link);
   };
 
-  const styles = {
+  const styles: { [key: string]: React.CSSProperties } = {
     section: {
-      maxWidth: '64rem', // ~1024px
+      maxWidth: '64rem',
       margin: '0 auto',
       padding: '4rem 1.5rem',
     },
@@ -36,7 +36,7 @@ const About: React.FC = () => {
       width: '300px',
       height: '400px',
       maxWidth: '100%',
-      objectFit: 'cover' as const,
+      objectFit: 'cover',
       border: '7px solid #747bff',
     },
     text: {
@@ -45,7 +45,7 @@ const About: React.FC = () => {
       maxWidth: '600px',
     },
     titleWrapper: {
-      position: 'relative' as const,
+      position: 'relative',
       display: 'inline-block',
       cursor: 'pointer',
       paddingBottom: '0.25rem',
@@ -53,16 +53,15 @@ const About: React.FC = () => {
     },
     title: {
       fontSize: '1.875rem',
-      fontWeight: '700',
+      fontWeight: 700,
       margin: 0,
     },
     underline: {
-      position: 'absolute' as const,
+      position: 'absolute',
       bottom: 0,
       left: 0,
       height: '4px',
       backgroundColor: '#747bff',
-      width: hover ? '100%' : '0%',
       transition: 'width 0.8s ease',
       borderRadius: '2px',
     },
@@ -75,7 +74,7 @@ const About: React.FC = () => {
       padding: '0.5rem 1.5rem',
       backgroundColor: '#4B5563',
       color: 'white',
-      fontWeight: '500',
+      fontWeight: 500,
       borderRadius: '0.5rem',
       border: 'none',
       cursor: 'pointer',
@@ -88,7 +87,9 @@ const About: React.FC = () => {
       <div
         style={{
           ...styles.container,
-          ...(window.innerWidth >= 768 ? styles.containerMd : {}),
+          ...(typeof window !== 'undefined' && window.innerWidth >= 768
+            ? styles.containerMd
+            : {}),
         }}
       >
         <div style={styles.imageWrapper}>
@@ -106,7 +107,12 @@ const About: React.FC = () => {
             onMouseLeave={() => setHover(false)}
           >
             <h2 style={styles.title}>À propos de moi</h2>
-            <span style={styles.underline} />
+            <span
+              style={{
+                ...styles.underline,
+                width: hover ? '100%' : '0%',
+              }}
+            />
           </div>
 
           <p style={styles.paragraph}>
@@ -121,43 +127,41 @@ const About: React.FC = () => {
             motivé à relever de nouveaux défis pour progresser en développement full-stack,
             prêt à m’investir pleinement dans une équipe dynamique, partout en France.
           </p>
-
         </div>
-         </div>
-<div
-  style={{
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: '1rem', // space between image and button
-    marginTop: '2rem', // optional spacing from above content
-  }}
->
-  <img
-    src="/cvSnap.png"
-    alt="Photo de Tanguy Jonqua"
-    style={{
-      width: '150px',
-      height: '200px',
-      maxWidth: '100%',
-      objectFit: 'cover',
-      border: '2px solid #747bff',
-      borderRadius: '4px', // optional for nicer edges
-      boxShadow: '0 2px 8px rgba(0,0,0,0.1)', // optional subtle shadow
-    }}
-  />
-  <button
-    onClick={handleDownloadCV}
-    style={styles.button}
-    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#374151')}
-    onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#4B5563')}
-  >
-    Télécharger mon CV
-  </button>
-</div>
+      </div>
 
-     
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          marginTop: '2rem',
+        }}
+      >
+        <img
+          src="/cvSnap.png"
+          alt="Aperçu CV Tanguy Jonqua"
+          style={{
+            width: '150px',
+            height: '200px',
+            maxWidth: '100%',
+            objectFit: 'cover',
+            border: '2px solid #747bff',
+            borderRadius: '4px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}
+        />
+        <button
+          onClick={handleDownloadCV}
+          style={styles.button}
+          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#374151')}
+          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#4B5563')}
+        >
+          Télécharger mon CV
+        </button>
+      </div>
     </section>
   );
 };
