@@ -142,7 +142,7 @@ const ulStyle: React.CSSProperties = {
         <li><NavLink href="#about">About</NavLink></li>
         <li><NavLink href="#parcours">Parcours</NavLink></li>
         <li><NavLink href="#competences">Competences</NavLink></li>
-        <li><NavLink href="#projects">Projects</NavLink></li>
+        <li><NavLink href="#projects">Projets</NavLink></li>
         <li><NavLink href="#contact">Contact</NavLink></li>
       </ul>
     </nav>

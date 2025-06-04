@@ -1,32 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const socials = [
   {
     name: "Instagram",
     url: "https://instagram.com/tanguyjo",
-    icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png", // icône Instagram
+    icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
   },
   {
     name: "LinkedIn",
     url: "https://linkedin.com/in/tanguyjonqua",
-    icon: "https://cdn-icons-png.flaticon.com/512/174/174857.png", // icône LinkedIn
+    icon: "https://cdn-icons-png.flaticon.com/512/174/174857.png",
   },
   {
     name: "GitHub",
     url: "https://github.com/tanguyjo",
-    icon: "https://cdn-icons-png.flaticon.com/512/25/25231.png", // icône GitHub
+    icon: "https://cdn-icons-png.flaticon.com/512/25/25231.png",
   },
 ];
 
 const ContactForm: React.FC = () => {
-  const [status, setStatus] = useState<
-    "idle" | "sending" | "success" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Listen to screen width changes
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("sending");
-
     const form = e.currentTarget;
     const formData = new FormData(form);
 
@@ -51,24 +57,28 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div id ='contact'
+    <div
+      id="contact"
       style={{
         maxWidth: 900,
         margin: "auto",
         fontFamily: "Arial, sans-serif",
         display: "flex",
+        flexDirection: isMobile ? "column" : "row",
         gap: 40,
         padding: "2rem",
         color: "#fff",
       }}
     >
-      {/* Formulaire à gauche */}
+      {/* Contact Form */}
       <form
         onSubmit={handleSubmit}
         style={{ flex: 1, minWidth: 300 }}
         noValidate
       >
         <h2>Contactez-moi</h2>
+        {/* Inputs and button same as before */}
+        {/* ... */}
         <input
           type="text"
           name="name"
@@ -142,7 +152,7 @@ const ContactForm: React.FC = () => {
         )}
       </form>
 
-      {/* Colonne contacts à droite */}
+      {/* Social / Contact Section */}
       <aside
         style={{
           flexBasis: 300,
