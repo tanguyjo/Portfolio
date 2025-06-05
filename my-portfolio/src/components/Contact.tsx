@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 const socials = [
-  {
-    name: "Instagram",
-    url: "https://instagram.com/tanguyjo",
-    icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
-  },
+  // {
+  //   name: "Instagram",
+  //   url: "https://instagram.com/tanguyjo",
+  //   icon: "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
+  // },
   {
     name: "LinkedIn",
     url: "https://linkedin.com/in/tanguyjonqua",
