@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
     position: 'sticky',
     top: 0,
     zIndex: 50,
-    backgroundColor: '#1f2937',
+    backgroundColor: '#2d2d2d',
     color: 'white',
     padding: '0.5rem 1.5rem',
     display: 'flex',
@@ -79,7 +79,7 @@ const ulStyle: React.CSSProperties = {
   position: isMobile ? 'absolute' : 'static',
   top: isMobile ? '70px' : undefined,
   right: isMobile ? '0' : undefined,
-  backgroundColor: isMobile ? '#1f2937' : undefined,
+  backgroundColor: isMobile ? '#2d2d2d' : undefined,
   width: isMobile ? '100%' : undefined,
 
   maxHeight: isMobile ? (menuOpen ? '300px' : '0') : 'none', // adjust maxHeight for full menu height

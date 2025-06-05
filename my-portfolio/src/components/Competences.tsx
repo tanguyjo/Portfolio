@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
+import Tilt from "react-parallax-tilt";
 
 interface Skill {
   name: string;
   icon: string;
+  proficiency?: number;
+  description?: string;
 }
 
 interface CompetenceCategory {
@@ -19,33 +24,32 @@ const competences: CompetenceCategory[] = [
   {
     category: "FrontEnd",
     skills: [
-      { name: "JS", icon: "js.png" },
-      { name: "TS", icon: "ts.png" },
-      { name: "HTML", icon: "html.png" },
-      { name: "CSS", icon: "css.png" },
+      { name: "JS", icon: "js.png", proficiency: 75, description: "JavaScript" },
+      { name: "TS", icon: "ts.png", proficiency: 45, description: "TypeScript" },
+      { name: "HTML", icon: "html.png", proficiency: 90, description: "HTML5" },
+      { name: "CSS", icon: "css.png", proficiency: 80, description: "CSS3" },
     ],
   },
   {
     category: "Backend",
     skills: [
-      { name: "Node.JS", icon: "nodejs.png" },
-      { name: "SQL", icon: "sql.png" },
-      { name: "MySQL", icon: "mysql.png" },
-      { name: "PostgreSQL", icon: "postgresql.png" },
-      { name: "SQLite", icon: "sqlite.png" },
-      { name: "PHP", icon: "php.png" },
-      { name: "Java", icon: "java.png" },
-      { name: "Go", icon: "go.png" },
-      // { name: "C#", icon: "csharp.png" },
+      { name: "Node.JS", icon: "nodejs.png", proficiency: 80, description: "Node.js" },
+      { name: "SQL", icon: "sql.png", proficiency: 75, description: "SQL" },
+      { name: "MySQL", icon: "mysql.png", proficiency: 70, description: "MySQL" },
+      { name: "PostgreSQL", icon: "postgresql.png", proficiency: 70, description: "PostgreSQL" },
+      { name: "SQLite", icon: "sqlite.png", proficiency: 60, description: "SQLite" },
+      { name: "PHP", icon: "php.png", proficiency: 75, description: "PHP" },
+      { name: "Java", icon: "java.png", proficiency: 40, description: "Java" },
+      { name: "Go", icon: "go.png", proficiency: 60, description: "Go" },
     ],
   },
   {
     category: "Frameworks",
     skills: [
-      { name: "Vue.JS", icon: "vuejs.png" },
-      { name: "React", icon: "react.png" },
-      { name: "Laravel", icon: "laravel.png" },
-      { name: "Tailwind", icon: "tailwind.png" },
+      { name: "Vue.JS", icon: "vuejs.png", proficiency: 80, description: "Vue.js" },
+      { name: "React", icon: "react.png", proficiency: 30, description: "React" },
+      { name: "Laravel", icon: "laravel.png", proficiency: 70, description: "Laravel" },
+      { name: "Tailwind", icon: "tailwind.png", proficiency: 45, description: "Tailwind" },
     ],
   },
 ];
@@ -101,6 +105,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: "#747bff",
     borderRadius: "2px",
   },
+  categoryTabs: {
+    display: "flex",
+    gap: 12,
+    marginBottom: 20,
+  },
+  tabButton: (active: boolean): React.CSSProperties => ({
+    cursor: "pointer",
+    padding: "8px 20px",
+    fontWeight: active ? "700" : "500",
+    backgroundColor: active ? "#747bff" : "transparent",
+    color: active ? "#fff" : "#ccc",
+    borderRadius: 8,
+    border: "none",
+    userSelect: "none",
+    transition: "background-color 0.3s ease",
+  }),
   categoryContainer: {
     marginBottom: 32,
   },
@@ -127,6 +147,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: 500,
     color: "#222",
     boxShadow: "0 2px 6px rgba(116, 123, 255, 0.2)",
+    cursor: "default",
+    userSelect: "none",
+    transformStyle: "preserve-3d",
+    perspective: 1000,
   },
   skillIcon: {
     width: 24,
@@ -142,11 +166,49 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#ddd",
     lineHeight: "1.8",
   },
+  progressBarBackground: {
+    width: 100,
+    height: 8,
+    backgroundColor: "#ddd",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginLeft: 10,
+  },
+  progressBarFill: {
+    height: "100%",
+    backgroundColor: "#747bff",
+    borderRadius: 8,
+  },
 };
 
 const Competences: React.FC = () => {
   const [hoverComp, setHoverComp] = useState(false);
   const [hoverLangue, setHoverLangue] = useState(false);
+  const [inView, setInView] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(competences[0].category);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.2,
+      }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const currentCompetence = competences.find((c) => c.category === activeCategory);
 
   return (
     <>
@@ -161,10 +223,18 @@ const Competences: React.FC = () => {
             transform: translateY(0);
           }
         }
+        .skill-animate {
+          animation: fadeSlideUp 0.6s ease forwards;
+        }
+        .skill-item:hover {
+          transform: scale(1.05);
+          transition: transform 0.3s ease;
+          z-index: 1;
+        }
       `}</style>
 
-      <section id="competences" style={styles.wrapper}>
-        {/* Colonne gauche : Compétences */}
+      <section id="competences" ref={sectionRef} style={styles.wrapper}>
+        {/* Left Column */}
         <div style={styles.leftColumn}>
           <div
             style={styles.headingWrapper}
@@ -181,22 +251,68 @@ const Competences: React.FC = () => {
             />
           </div>
 
-          {competences.map(({ category, skills }) => (
-            <div key={category} style={styles.categoryContainer}>
-              <h3 style={styles.categoryTitle}>{category}</h3>
+          {/* Category filter tabs */}
+          <div style={styles.categoryTabs}>
+            {competences.map(({ category }) => (
+              <button
+                key={category}
+                style={styles.tabButton(category === activeCategory)}
+                onClick={() => setActiveCategory(category)}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          {currentCompetence && (
+            <div style={styles.categoryContainer}>
+              <h3 style={styles.categoryTitle}>{currentCompetence.category}</h3>
               <ul style={styles.skillsList}>
-                {skills.map(({ name, icon }) => (
-                  <li key={name} style={styles.skillItem}>
-                    <img src={icon} alt={name} style={styles.skillIcon} />
-                    {name}
-                  </li>
+                {currentCompetence.skills.map(({ name, icon, proficiency, description }, index) => (
+                  <Tippy key={name} content={description || ""} delay={200} placement="top" arrow={true}>
+  <div style={{ display: "inline-block" }}>
+    <Tilt
+      tiltMaxAngleX={15}
+      tiltMaxAngleY={15}
+      glareEnable={true}
+      glareMaxOpacity={0.2}
+      scale={1.05}
+      transitionSpeed={400}
+      style={{ borderRadius: 8, display: "inline-block" }}
+    >
+      <li
+        style={{
+          ...styles.skillItem,
+          animationDelay: `${index * 0.1}s`,
+        }}
+        className={`skill-item ${inView ? "skill-animate" : ""}`}
+        tabIndex={0}
+      >
+        <img src={icon} alt={name} style={styles.skillIcon} />
+        {name}
+        {proficiency !== undefined && (
+          <div style={styles.progressBarBackground}>
+            <div
+              style={{
+                ...styles.progressBarFill,
+                width: `${proficiency}%`,
+                transition: "width 1s ease",
+              }}
+            />
+          </div>
+        )}
+      </li>
+    </Tilt>
+  </div>
+</Tippy>
+
                 ))}
               </ul>
             </div>
-          ))}
+          )}
         </div>
 
-        {/* Colonne droite : Langues */}
+        {/* Right Column */}
         <div style={styles.rightColumn}>
           <div
             style={styles.headingWrapper}
@@ -212,7 +328,7 @@ const Competences: React.FC = () => {
               }}
             />
           </div>
-
+              
           <ul style={styles.langueList}>
             {langues.map((langue) => (
               <li key={langue.nom}>

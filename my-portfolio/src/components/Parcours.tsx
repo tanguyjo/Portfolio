@@ -45,7 +45,7 @@ const Parcours: React.FC = () => {
         @keyframes fadeSlideUp {
           0% {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(40px);
           }
           100% {
             opacity: 1;
@@ -68,14 +68,27 @@ const Parcours: React.FC = () => {
             box-shadow: 0 0 0 0 rgba(116, 123, 255, 0.7);
           }
           50% {
-            transform: scale(1.1);
-            box-shadow: 0 0 8px 6px rgba(116, 123, 255, 0);
+            transform: scale(1.15);
+            box-shadow: 0 0 15px 10px rgba(116, 123, 255, 0);
           }
+        }
+
+        @keyframes bounceCircle {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+          }
+          50% {
+            transform: translateY(-10px) scale(1.2);
+          }
+        }
+
+        @keyframes drawLine {
+          from { width: 0; }
+          to { width: 100%; }
         }
       `}</style>
 
-      <div id='parcours' style={styles.wrapper}>
-        {/* Wrapper centré */}
+      <div id="parcours" style={styles.wrapper}>
         <div style={{ width: '100%', textAlign: 'center' }}>
           <div
             style={styles.titleWrapper}
@@ -94,7 +107,13 @@ const Parcours: React.FC = () => {
         </div>
 
         <div style={styles.timelineContainer}>
-          <div style={styles.line} />
+          <div
+            style={{
+              ...styles.line,
+              animation: mounted ? 'drawLine 1s ease forwards' : undefined,
+              width: mounted ? '100%' : 0,
+            }}
+          />
           {experiences.map((exp, i) => (
             <TimelineCard key={i} experience={exp} index={i} mounted={mounted} />
           ))}
@@ -111,14 +130,24 @@ interface TimelineCardProps {
 }
 
 const TimelineCard: React.FC<TimelineCardProps> = ({ experience, index, mounted }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
       style={{
         ...styles.cardContainer,
-        animation: mounted ? `fadeSlideUp 0.6s ease forwards` : undefined,
-        animationDelay: mounted ? `${index * 0.25}s` : undefined,
+        animation: mounted ? `fadeSlideUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards` : undefined,
+        animationDelay: mounted ? `${index * 0.3}s` : undefined,
         opacity: 0,
+        transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+        boxShadow: isHovered
+          ? '0 12px 20px rgba(116, 123, 255, 0.5)'
+          : '0 4px 10px rgba(0,0,0,0.12)',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        cursor: 'pointer',
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div style={styles.card}>
         <p style={styles.date}>{experience.date}</p>
@@ -129,15 +158,15 @@ const TimelineCard: React.FC<TimelineCardProps> = ({ experience, index, mounted 
       <div
         style={{
           ...styles.connector,
-          animation: mounted ? 'growConnector 0.5s ease forwards' : undefined,
-          animationDelay: mounted ? `${0.6 + index * 0.25}s` : undefined,
+          animation: mounted ? 'growConnector 0.6s ease forwards' : undefined,
+          animationDelay: mounted ? `${0.6 + index * 0.3}s` : undefined,
           height: 0,
         }}
       />
       <div
         style={{
           ...styles.circle,
-          animation: 'pulseCircle 2.5s ease-in-out infinite',
+          animation: isHovered ? 'bounceCircle 1s ease-in-out infinite' : 'pulseCircle 2.5s ease-in-out infinite',
         }}
       />
     </div>
@@ -146,7 +175,7 @@ const TimelineCard: React.FC<TimelineCardProps> = ({ experience, index, mounted 
 
 const styles: { [key: string]: React.CSSProperties } = {
   wrapper: {
-       padding: '120px 20px 40px',
+    padding: '120px 20px 40px',
     marginTop: '-80px',
     fontFamily: 'Arial, sans-serif',
     overflowX: 'auto',
@@ -189,6 +218,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#747bff',
     zIndex: 0,
     borderRadius: 2,
+    width: 0,
   },
   cardContainer: {
     display: 'flex',
