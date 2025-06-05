@@ -60,7 +60,7 @@ const projects: Project[] = [
     images: ["lito1.png", "lito2.png", "lito3.png", "lito4.png", "lito5.png"],
     description: (
       <>
-        Plateforme de gestion d’un magasin de meubles sur lequel des utilisateurs (admin) interagissent avec le stock et des utilisateurs (clients) s'inscrivent et se connectent.<br />
+        Ce projet est une application back-office de gestion d'association permettant de gérer les membres, les événements, les activités d'une association et d'afficher des données clées. Elle est destinée a être utilisée par un unique administrateur, mais laisse la possibilitée au membres de l'association d'y accéder de manière limitée<br />
         <strong>Back-end</strong> : PHP<br />
         <strong>Front-end</strong> : HTML, Tailwind (CSS)<br />
         <strong>Base de données</strong> : MySQL
